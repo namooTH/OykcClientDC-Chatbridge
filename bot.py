@@ -57,11 +57,12 @@ async def on_message(message: discord.Message):
                                     + (f"{message.content if message.content else ''}"), # the message receives should have attachments of message.contnet is none
                                     #replaced id with storage system
                                     files=([await a.to_file() for a in message.attachments] if message.attachments else []), 
-                                    avatar_url=avatar_url, allowed_mentions=discord.AllowedMentions.none(), wait=True)
+                                    avatar_url=avatar_url,username=str(message.author), allowed_mentions=discord.AllowedMentions.none(), wait=True)
         lastperson = message.author
         file = open("list.txt", 'a') #appeding the id to txt
         file.write(f"{wh_mess.id}|{message.id}\n")
         file.close()
+ 
  
     #reply system
     

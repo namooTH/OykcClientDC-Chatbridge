@@ -45,6 +45,7 @@ async def on_message(message: discord.Message):
         except:
             msgurl = "Reducted"
 
+
         #// when the user dont have avatar it would just error so this is the fix
         try:
             avatar_url=(message.author.avatar.url if message.author.avatar else None)
@@ -63,7 +64,46 @@ async def on_message(message: discord.Message):
         file.write(f"{wh_mess.id}|{message.id}\n")
         file.close()
  
- 
+    # sending system
+
+    if message.channel.id == endchannel:
+        if len(message.content) > 1 or message.attachments: # i love checking
+            if message.content.startswith("!"):
+                if not message.author.bot:
+                    if not message.author == bot.user:
+                        if message.author.id not in notallowid:
+                            onixgeneral = bot.get_channel(930842597759541328)
+                            await onixgeneral.send((message.content)[1:], files=([await a.to_file() for a in message.attachments] if message.attachments else [])) #stole rasp code ong
+                            notallowid.append(message.author.id)
+                            await asyncio.sleep(5)
+                            notallowid.remove(message.author.id)
+                        else:
+                            await message.add_reaction("❌")
+
+    # delete system
+
+    if message.channel.id == endchannel:   
+        if message.reference:
+            if message.reference.resolved.author.bot:
+                if message.content == ".del":
+                    try:
+                        file = open("list.txt", "r")
+                        lines = file.readlines()
+                        allmessid = {}
+                        for i in lines:
+                            i = i.replace("\n", "")
+                            i = i.split("|")
+                            allmessid.update({i[0]: i[1]})
+                        if str(message.reference.resolved.id) in allmessid.keys():
+                            onixgeneral = bot.get_channel(930842597759541328)
+                            msg = await onixgeneral.fetch_message(int(allmessid[str(message.reference.resolved.id)]))
+                            await msg.delete()
+                            await message.add_reaction("✅")
+                            return
+                    except:
+                        await message.add_reaction("❌")
+                        return
+
     #reply system
     
     if message.channel.id == endchannel:   
@@ -81,16 +121,5 @@ async def on_message(message: discord.Message):
                     msg = await onixgeneral.fetch_message(int(allmessid[str(message.reference.resolved.id)]))
                     await msg.reply(message.content)
 
-@bot.command()
-async def send(ctx, *,arg):
-    if ctx.channel.id == endchannel:
-        if ctx.author.id not in notallowid:
-            onixgeneral = bot.get_channel(930842597759541328)
-            await onixgeneral.send(arg)
-            notallowid.append(ctx.author.id)
-            await asyncio.sleep(5)
-            notallowid.remove(ctx.author.id)
-        else:
-            await ctx.message.add_reaction("❌")
 
 bot.run(token)

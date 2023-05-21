@@ -87,42 +87,43 @@ async def on_message(message: discord.Message):
                             await message.add_reaction("❌")
                             await sendwebhook(content=f"```{e}```")
 
-    # delete system
+    # edit, delete, reply
 
     if message.channel.id == endchannel:   
         if message.reference:
             if message.reference.resolved.author.bot:
-                if message.content == ".del":
+                lines = open("list.txt", "r").readlines()
+                allmessid = {}
+                for i in lines:
+                    i = i.replace("\n", "").split("|")
+                    allmessid.update({i[0]: i[1]})
+
+                if message.content[:5] == ".edit": # EDIT EDIT EDIT EDIT EDIT EDIT EDIT EDIT EDIT EDIT EDIT  
+                    if len(message.content) > 6:
+                        try:
+                            if str(message.reference.resolved.id) in allmessid.keys():
+                                onixgeneral = bot.get_channel(930842597759541328)
+                                msg = await onixgeneral.fetch_message(int(allmessid[str(message.reference.resolved.id)]))
+                                await msg.edit(message.content[6:])
+                                return await message.add_reaction("✅")
+                        except Exception as e:
+                          async with aiohttp.ClientSession() as session:
+                            await message.add_reaction("❌")
+                            return await sendwebhook(content=f"```{e}```")
+
+                if message.content == ".del": # DEL DEL DEL DEL DEL DEL DEL DEL DEL DEL DEL DEL DEL DEL 
                     try:
-                        lines = open("list.txt", "r").readlines()
-                        allmessid = {}
-                        for i in lines:
-                            i = i.replace("\n", "").split("|")
-                            allmessid.update({i[0]: i[1]})
                         if str(message.reference.resolved.id) in allmessid.keys():
                             onixgeneral = bot.get_channel(930842597759541328)
                             msg = await onixgeneral.fetch_message(int(allmessid[str(message.reference.resolved.id)]))
                             await msg.delete()
-                            await message.add_reaction("✅")
-                            return
+                            return await message.add_reaction("✅")
                     except Exception as e:
                       async with aiohttp.ClientSession() as session:
                         await message.add_reaction("❌")
-                        await sendwebhook(content=f"```{e}```")
+                        return await sendwebhook(content=f"```{e}```")
 
-    #reply system
-    
-    if message.channel.id == endchannel:   
-        if message.reference:
-            if message.reference.resolved.author.bot:
-                print("ballsex")
-                lines = open("list.txt", "r").readlines()
-                allmessid = {}
-                for i in lines:
-                    i = i.replace("\n", "")
-                    i = i.split("|")
-                    allmessid.update({i[0]: i[1]})
-                if str(message.reference.resolved.id) in allmessid.keys():
+                if str(message.reference.resolved.id) in allmessid.keys(): # REPLY REPLY REPLY REPLY REPLY REPLY REPLY REPLY 
                     try:
                         onixgeneral = bot.get_channel(930842597759541328)
                         msg = await onixgeneral.fetch_message(int(allmessid[str(message.reference.resolved.id)]))

@@ -25,6 +25,9 @@ async def sendwebhook(content):
         webhook = Webhook.from_url(url, session=session)
         await webhook.send(content=content)
 
+@bot.event
+async def on_ready():
+    await bot.change_presence(status=discord.Status.offline)
 
 @bot.listen("on_message")
 async def on_message(message: discord.Message):

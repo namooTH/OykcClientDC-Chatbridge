@@ -33,8 +33,7 @@ async def on_message(message: discord.Message):
       async with aiohttp.ClientSession() as session:
         webhook = Webhook.from_url(url, session=session)
         msgurl = ""
-        file = open("list.txt", "r")
-        lines = file.readlines()
+        lines = open("list.txt", "r").readlines()
         allmessid = {}
         for i in lines:
             i = i.replace("\n", "")
@@ -65,7 +64,7 @@ async def on_message(message: discord.Message):
         file = open("list.txt", 'a') #appeding the id to txt
         file.write(f"{wh_mess.id}|{message.id}\n")
         file.close()
- 
+
     # sending system
 
     if message.channel.id == endchannel:

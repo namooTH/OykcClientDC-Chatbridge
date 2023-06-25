@@ -8,6 +8,7 @@ import asyncio
 token = "" # user token
 url = "" # webhook url
 endchannel = 0 # < insert channel id that u want the command to be execute
+logchannel = 123 # < channel that you want to log
 
 # do not mess with this
 notallowid = []
@@ -46,7 +47,7 @@ async def on_ready():
 @bot.listen("on_message")
 async def on_message(message: discord.Message):
     global lastperson
-    if message.channel.id == 930842597759541328:
+    if message.channel.id == logchannel:
       async with aiohttp.ClientSession() as session:
         webhook = Webhook.from_url(url, session=session)
         msgurl = ""
@@ -84,7 +85,7 @@ async def on_message(message: discord.Message):
                 if not message.author.bot and not message.author == bot.user:
                     try:
                         if message.author.id not in notallowid:
-                            onixgeneral = bot.get_channel(930842597759541328)
+                            onixgeneral = bot.get_channel(logchannel)
                             await onixgeneral.send((message.content)[1:], files=([await a.to_file() for a in message.attachments] if message.attachments else [])) #stole rasp code ong
                             notallowid.append(message.author.id)
                             await asyncio.sleep(5)
@@ -105,7 +106,7 @@ async def on_message(message: discord.Message):
                     if len(message.content) > 6:
                         try:
                             if str(message.reference.resolved.id) in allmessid.keys():
-                                onixgeneral = bot.get_channel(930842597759541328)
+                                onixgeneral = bot.get_channel(logchannel)
                                 msg = await onixgeneral.fetch_message(int(allmessid[str(message.reference.resolved.id)]))
                                 await msg.edit(message.content[6:])
                                 return await message.add_reaction("✅")
@@ -117,7 +118,7 @@ async def on_message(message: discord.Message):
                 if message.content[:6] == ".react": # REACT REACT REACT REACT REACT REACT REACT REACT REACT REACT REACT  
                     try:
                         if str(message.reference.resolved.id) in allmessid.keys():
-                            onixgeneral = bot.get_channel(930842597759541328)
+                            onixgeneral = bot.get_channel(logchannel)
                             msg = await onixgeneral.fetch_message(int(allmessid[str(message.reference.resolved.id)]))
                             await msg.delete()
                             return await message.add_reaction("✅")
@@ -129,7 +130,7 @@ async def on_message(message: discord.Message):
                 if message.content == ".del": # DEL DEL DEL DEL DEL DEL DEL DEL DEL DEL DEL DEL DEL DEL 
                     try:
                         if str(message.reference.resolved.id) in allmessid.keys():
-                            onixgeneral = bot.get_channel(930842597759541328)
+                            onixgeneral = bot.get_channel(logchannel)
                             msg = await onixgeneral.fetch_message(int(allmessid[str(message.reference.resolved.id)]))
                             await msg.delete()
                             return await message.add_reaction("✅")
@@ -141,7 +142,7 @@ async def on_message(message: discord.Message):
                 if message.content.startswith("!") and len(message.content) > 1:
                     if str(message.reference.resolved.id) in allmessid.keys(): # REPLY REPLY REPLY REPLY REPLY REPLY REPLY REPLY 
                         try:
-                            onixgeneral = bot.get_channel(930842597759541328)
+                            onixgeneral = bot.get_channel(logchannel)
                             msg = await onixgeneral.fetch_message(int(allmessid[str(message.reference.resolved.id)]))
                             await msg.reply(message.content[1:])
                         except Exception as e:
@@ -157,7 +158,7 @@ async def on_message(message: discord.Message):
 @bot.event
 async def on_reaction_remove(reaction, user):
     print("asdkasdkjasakldasjkdasjkdjlasdkjl")
-    onixgeneral = bot.get_channel(930842597759541328)
+    onixgeneral = bot.get_channel(logchannel)
     if reaction.message.channel.id != onixgeneral.id:
         return
     if str(reaction.message.id) in allmessid.values():
@@ -171,7 +172,7 @@ async def on_reaction_remove(reaction, user):
 
 @bot.event
 async def on_reaction_add(reaction, user):
-    if reaction.message.channel.id != 930842597759541328:
+    if reaction.message.channel.id != logchannel:
         return
     if str(reaction.message.id) in allmessid.values():
         for k,v in allmessid.items():
@@ -184,7 +185,7 @@ async def on_reaction_add(reaction, user):
 
 @bot.event
 async def on_message_delete(message):
-    if message.channel.id != 930842597759541328:
+    if message.channel.id != logchannel:
         return
     if str(message.id) in allmessid.values():
         for k,v in allmessid.items():
@@ -197,7 +198,7 @@ async def on_message_delete(message):
 
 @bot.event
 async def on_message_edit(message_before, message):
-    if message.channel.id != 930842597759541328:
+    if message.channel.id != logchannel:
         return
     if str(message.id) in allmessid.values():
         for k,v in allmessid.items():

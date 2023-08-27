@@ -209,7 +209,7 @@ async def on_message_edit(message_before, message):
                 msg = await attic.fetch_message(int(k))
                 msgurl = msg.jump_url
     async with aiohttp.ClientSession() as session:
-        await sendwebhook(content=f"`{message.content}` [Jump to original message](<{msgurl}>) Event: ✂️Edited"
+        await sendwebhook(content=f"`{message.content}` [Jump to original message](<{msgurl}>) Event: ✂️Edited")
 
 # todo
 # make that u can replace channel id in 1 line
